@@ -1,12 +1,8 @@
 #ifndef OPERAND_HPP
 # define OPERAND_HPP
 
-// #include "IOperand.hpp"
-// #include "VM.hpp"
-
+#include "VM.hpp"
 #include "Factory.hpp"
-
-// enum eOperandType{Int8 = 0, Int16 = 1, Int32 = 2, Float = 3, Double = 4};
 
 template <typename T>
 class Operand : public IOperand
@@ -17,7 +13,8 @@ class Operand : public IOperand
 
 public:
 	Operand();
-	Operand(T value, eOperandType type) : value(value), type(type) {}
+	Operand(T value, std::string str, eOperandType type)
+	: value(value), value_str(str), type(type) {}
 	Operand(Operand const &o);
 	Operand & operator=(Operand const &o);
 	~Operand() {}
@@ -31,32 +28,33 @@ public:
 
 	IOperand const * operator+( IOperand const & rhs ) const
 	{
-		return Factory().createOperand(type, this->toString() + rhs.toString());
+		T result = this->value + static_cast<T>(std::stod(rhs.toString()));
+		return Factory().createOperand(type, std::to_string(result));
 	}
 	 // Sum
-	// IOperand const * operator-( IOperand const & rhs ) const
-	// {
-	// 	Operand *op = dynamic_cast<Operand*>(rhs); 
-	// 	return new Operand<T>(this->value - op->value);
-	// }
-	//  // Difference
-	// IOperand const * operator*( IOperand const & rhs ) const
-	// {
-	// 	Operand *op = dynamic_cast<Operand*>(rhs); 
-	// 	return new Operand<T>(this->value * op->value);
-	// }
-	//  // Product
-	// IOperand const * operator/( IOperand const & rhs ) const
-	// {
-	// 	Operand *op = dynamic_cast<Operand*>(rhs); 
-	// 	return new Operand<T>(this->value / op->value);
-	// }
-	//  // Quotient
-	// IOperand const * operator%( IOperand const & rhs ) const
-	// {
-	// 	Operand *op = dynamic_cast<Operand*>(rhs); 
-	// 	return new Operand<T>(this->value % op->value);
-	// }
+	IOperand const * operator-( IOperand const & rhs ) const
+	{
+		T result = this->value - static_cast<T>(std::stod(rhs.toString()));
+		return Factory().createOperand(type, std::to_string(result));
+	}
+	 // Difference
+	IOperand const * operator*( IOperand const & rhs ) const
+	{
+		T result = this->value * static_cast<T>(std::stod(rhs.toString()));
+		return Factory().createOperand(type, std::to_string(result));
+	}
+	 // Product
+	IOperand const * operator/( IOperand const & rhs ) const
+	{
+		T result = this->value / static_cast<T>(std::stod(rhs.toString()));
+		return Factory().createOperand(type, std::to_string(result));
+	}
+	 // Quotient
+	IOperand const * operator%( IOperand const & rhs ) const
+	{
+		T result = static_cast<int>(this->value) % static_cast<int>(std::stoi(rhs.toString()));
+		return Factory().createOperand(type, std::to_string(result));
+	}
 	 // Modulo
 	std::string const & toString(void) const // String representation of the instance
 	{
