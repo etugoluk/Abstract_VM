@@ -15,13 +15,12 @@ IOperand const * Factory::createOperand(eOperandType type, std::string const & v
 
 IOperand const *Factory::createInt8( std::string const & value)  const
 {
-	return new Operand<char>(value[0]);
+	return new Operand<int8_t>(static_cast<int8_t>(std::stoi(value)));
 }
 
 IOperand const *Factory::createInt16( std::string const & value) const
 {
-	//???
-	return new Operand<short>(std::stoi(value));
+	return new Operand<int16_t>(static_cast<int16_t>(std::stoi(value)));
 }
 
 IOperand const *Factory::createInt32( std::string const & value) const
