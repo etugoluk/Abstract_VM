@@ -3,6 +3,8 @@
 #include "../includes/Operand.hpp"
 #include "../includes/Factory.hpp"
 
+std::stack<IOperand*> stack;
+
 int main()
 {
 	Factory f;

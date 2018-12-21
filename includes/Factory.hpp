@@ -2,12 +2,14 @@
 #ifndef FACTORY_HPP
 #define FACTORY_HPP
 
-#include "VM.hpp"
-#include "Operand.hpp"
+// #include "VM.hpp"
+#include "IOperand.hpp"
 
 class Factory
 {
 public:
+	Factory();
+
 	IOperand const * createOperand(eOperandType type, std::string const & value ) const;
 
 	IOperand const * createInt8( std::string const & value ) const;

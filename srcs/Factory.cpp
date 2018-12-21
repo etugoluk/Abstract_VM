@@ -1,6 +1,8 @@
 
 #include "../includes/Factory.hpp"
 
+Factory::Factory() {}
+
 IOperand const * Factory::createOperand(eOperandType type, std::string const & value ) const
 {
 	IOperand const * (Factory::*ptr[5])(std::string const & value) const;
@@ -15,25 +17,25 @@ IOperand const * Factory::createOperand(eOperandType type, std::string const & v
 
 IOperand const *Factory::createInt8( std::string const & value)  const
 {
-	return new Operand<int8_t>(static_cast<int8_t>(std::stoi(value)));
+	return new Operand<int8_t>(static_cast<int8_t>(std::stoi(value)), 0);
 }
 
 IOperand const *Factory::createInt16( std::string const & value) const
 {
-	return new Operand<int16_t>(static_cast<int16_t>(std::stoi(value)));
+	return new Operand<int16_t>(static_cast<int16_t>(std::stoi(value)), 1);
 }
 
 IOperand const *Factory::createInt32( std::string const & value) const
 {
-	return new Operand<int>(std::stoi(value));
+	return new Operand<int>(std::stoi(value), 2);
 }
 
 IOperand const *Factory::createFloat( std::string const & value) const
 {
-	return new Operand<float>(std::stof(value));
+	return new Operand<float>(std::stof(value), 3);
 }
 
 IOperand const *Factory::createDouble( std::string const & value) const
 {
-	return new Operand<double>(std::stod(value));
+	return new Operand<double>(std::stod(value), 4);
 }
