@@ -5,7 +5,7 @@ SRCS = srcs/main.cpp \
 
 OBJ = $(SRCS:.cpp=.o)
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -std=c++11 -Wall -Wextra -Werror
 
 all: $(NAME)
 
