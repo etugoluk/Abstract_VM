@@ -1,7 +1,6 @@
 #ifndef OPERAND_HPP
 # define OPERAND_HPP
 
-#include "VM.hpp"
 #include "Factory.hpp"
 
 template <class T>

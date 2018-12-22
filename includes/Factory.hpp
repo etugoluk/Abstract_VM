@@ -2,7 +2,6 @@
 #ifndef FACTORY_HPP
 #define FACTORY_HPP
 
-#include "VM.hpp"
 #include "IOperand.hpp"
 
 class Factory

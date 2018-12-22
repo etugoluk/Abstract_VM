@@ -1,7 +1,9 @@
 #ifndef IOPERAND_HPP
 # define IOPERAND_HPP
 
-#include "VM.hpp"
+#include <iostream>
+#include <cstdint>
+#include <stack>
 
 enum eOperandType{Int8 = 0, Int16 = 1, Int32 = 2, Float = 3, Double = 4};
 
