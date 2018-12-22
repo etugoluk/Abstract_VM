@@ -2,6 +2,7 @@ NAME = avm
 
 SRCS = srcs/main.cpp \
 		srcs/Factory.cpp \
+		srcs/Parser.cpp \
 
 OBJ = $(SRCS:.cpp=.o)
 

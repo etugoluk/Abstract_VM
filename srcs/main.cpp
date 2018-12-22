@@ -11,7 +11,8 @@ int main(int argc, char **argv)
 	
 	Parser p;
 
-	p.read_file(argv[argc - 1]);
+	if (argc == 2)
+		p.read_file(argv[argc - 1]);
 
 
 	// Factory f1;
