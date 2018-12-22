@@ -7,12 +7,10 @@ std::stack<IOperand*> stack;
 
 int main(int argc, char **argv)
 {
-	// VM vm;
-	
-	Parser p;
+	VM vm;
 
 	if (argc == 2)
-		p.read_file(argv[argc - 1]);
+		vm.p.read_file(argv[argc - 1]);
 
 
 	// Factory f1;

@@ -7,9 +7,21 @@
 
 class VM
 {
+	std::stack<IOperand*> stack;
+public:
+	void push(eOperandType type, std::string const & value);
+	void pop();
+	void dump(eOperandType type, std::string const & value);
+	void add();
+	void sub();
+	void mul();
+	void div();
+	void mod();
+	void print();
+	void exit();
+
 	Factory f;
 	Parser p;
-	std::stack<IOperand*> stack;
 };
 
 #endif
