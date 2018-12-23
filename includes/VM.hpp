@@ -7,18 +7,19 @@
 
 class VM
 {
-	std::stack<IOperand*> stack;
+	std::deque<const IOperand*> stack;
 public:
-	void push(eOperandType type, std::string const & value);
-	void pop();
-	void dump(eOperandType type, std::string const & value);
-	void add();
-	void sub();
-	void mul();
-	void div();
-	void mod();
-	void print();
-	void exit();
+	void Push(eOperandType type, std::string const & value);
+	void Pop();
+	void Dump();
+	void Assert(eOperandType type, std::string const & value);
+	void Add();
+	void Sub();
+	void Mul();
+	void Div();
+	void Mod();
+	void Print();
+	void Exit();
 
 	Factory f;
 	Parser p;
