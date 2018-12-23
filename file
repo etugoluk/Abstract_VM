@@ -1,0 +1,7 @@
+push int32(123)
+push double(5.7)
+dump
+pop
+push float(0.546)
+dump
+exit

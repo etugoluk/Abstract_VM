@@ -1,30 +1,40 @@
 
 #include "../includes/Parser.hpp"
 
-Parser::Parser()
-{}
+// Parser::Parser()
+// {}
 
 void Parser::print_parse_line()
 {
-	for (int i = 0; i < 3; ++i)
+	for (auto it = parse_line.begin(); it != parse_line.end(); ++it)
 	{
-		std::cout << parse_line[i] << std::endl;
+		std::cout << *it << std::endl;
 	}
 }
 
 void Parser::parse(std::string const & str)
 {
-	std::regex rule("^(push|assert) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)");
+	std::regex rule1("^(push|assert) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)$");
+	std::regex rule2("^(pop|dump|add|sub|mul|div|mod|print|exit)$");
 	std::smatch match;
 
-	if (std::regex_match(str, match, rule))
+	if (std::regex_match(str, match, rule1))
 	{
-		std::cout << "Good string\n";
+		std::cout << "Good string - type 1\n";
 
-		parse_line[0] = match.str(1);
-		parse_line[1] = match.str(2);
-		parse_line[2] = match.str(3);
+		parse_line.push_back(match.str(1));
+		parse_line.push_back(match.str(2));
+		parse_line.push_back(match.str(3));
 		print_parse_line();
+		parse_line.clear();
+	}
+	else if (std::regex_match(str, match, rule2))
+	{
+		std::cout << "Good string - type 2\n";
+
+		parse_line.push_back(match.str(1));
+		print_parse_line();
+		parse_line.clear();
 	}
 	else
 		std::cout << "Bad string\n";

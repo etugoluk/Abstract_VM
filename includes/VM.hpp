@@ -8,6 +8,8 @@
 class VM
 {
 	std::deque<const IOperand*> stack;
+	std::vector<std::string> parse_line;
+
 public:
 	void Push(eOperandType type, std::string const & value);
 	void Pop();
@@ -22,7 +24,11 @@ public:
 	void Exit();
 
 	Factory f;
-	Parser p;
+	// Parser p;
+	void print_parse_line();
+	void parse(std::string const & str);
+	void read_file(std::string const & str);
+	void execute();
 };
 
 #endif

@@ -9,9 +9,9 @@
 
 class Parser
 {
-	std::array<std::string, 3> parse_line;
+	// std::vector<std::string> parse_line;
 public:
-	Parser();
+	// Parser();
 
 	void print_parse_line();
 	void parse(std::string const & str);

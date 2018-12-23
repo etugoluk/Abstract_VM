@@ -1,5 +1,101 @@
 #include "../includes/VM.hpp"
 
+void VM::print_parse_line()
+{
+	for (auto it = parse_line.begin(); it != parse_line.end(); ++it)
+	{
+		std::cout << *it << std::endl;
+	}
+}
+
+void VM::parse(std::string const & str)
+{
+	std::regex rule1("^(push|assert) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)$");
+	std::regex rule2("^(pop|dump|add|sub|mul|div|mod|print|exit)$");
+	std::smatch match;
+
+	if (std::regex_match(str, match, rule1))
+	{
+		std::cout << "Good string - type 1\n";
+
+		parse_line.push_back(match.str(1));
+		parse_line.push_back(match.str(2));
+		parse_line.push_back(match.str(3));
+	}
+	else if (std::regex_match(str, match, rule2))
+	{
+		std::cout << "Good string - type 2\n";
+
+		parse_line.push_back(match.str(1));
+	}
+	else
+	{
+		std::cout << "Bad string\n";
+		return ;
+	}
+
+	execute();
+	parse_line.clear();
+}
+
+void VM::read_file(std::string const & str)
+{
+	std::ifstream in(str);
+	if (!in.is_open())
+		return ;
+
+	std::string line;
+	while (std::getline(in, line))
+	{
+		parse(line);
+	}
+}
+
+void VM::execute()
+{
+	if (parse_line.size() == 3)
+	{
+		eOperandType e;
+		if (!parse_line[1].compare("int8"))
+			e = Int8;
+		else if (!parse_line[1].compare("int16"))
+			e = Int16;
+		else if (!parse_line[1].compare("int32"))
+			e = Int32;
+		else if (!parse_line[1].compare("double"))
+			e = Double;
+		else if (!parse_line[1].compare("float"))
+			e = Float;
+		if (!parse_line[0].compare("push"))
+			Push(e, parse_line[2]);
+		else
+			Assert(e, parse_line[2]);
+	}
+	else if (parse_line.size() == 1)
+	{
+		if (!parse_line[0].compare("pop"))
+			Pop();
+		else if (!parse_line[0].compare("dump"))
+			Dump();
+		else if (!parse_line[0].compare("add"))
+			Add();
+		else if (!parse_line[0].compare("sub"))
+			Sub();
+		else if (!parse_line[0].compare("mul"))
+			Mul();
+		else if (!parse_line[0].compare("div"))
+			Div();
+		else if (!parse_line[0].compare("mod"))
+			Mod();
+		else if (!parse_line[0].compare("print"))
+			Print();
+		else if (!parse_line[0].compare("exit"))
+		{
+			Exit();
+		}
+	}
+}
+
 void VM::Push(eOperandType type, std::string const & value)
 {
 	stack.push_back(f.createOperand(type, value));
@@ -14,9 +110,9 @@ void VM::Pop()
 
 void VM::Dump()
 {
-	for (auto i = stack.size(); i != 0; --i)
+	for (int i = stack.size() - 1; i != -1; --i)
 	{
-		std::cout << stack[i] << std::endl;
+		std::cout << stack[i]->toString() << std::endl;
 	}
 }
 

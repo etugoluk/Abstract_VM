@@ -10,7 +10,7 @@ int main(int argc, char **argv)
 	VM vm;
 
 	if (argc == 2)
-		vm.p.read_file(argv[argc - 1]);
+		vm.read_file(argv[argc - 1]);
 
 
 	// Factory f1;
