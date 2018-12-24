@@ -3,7 +3,9 @@
 #define VM_HPP
 
 #include "Operand.hpp"
-#include "Parser.hpp"
+#include <vector>
+#include <regex>
+#include <fstream>
 
 class VM
 {
@@ -23,12 +25,35 @@ public:
 	void Print();
 	void Exit();
 
-	Factory f;
-	// Parser p;
 	void print_parse_line();
-	void parse(std::string const & str);
+	void parse(std::string const & str, int line);
 	void read_file(std::string const & str);
 	void execute();
+
+	Factory f;
+
+	class UnknownInstruction : public std::exception
+	{
+	public:
+		std::string command;
+		int			line;
+
+		UnknownInstruction();
+		UnknownInstruction(std::string command, int line);
+		UnknownInstruction(UnknownInstruction const & rv);
+		~UnknownInstruction() throw();
+		
+		UnknownInstruction & operator=(UnknownInstruction const & rv);
+
+		virtual const char *what() const throw();
+
+	};
+
+	class NoExit : public std::exception
+	{
+	public:
+		virtual const char *what() const throw();
+	};
 };
 
 #endif

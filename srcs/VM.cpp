@@ -8,7 +8,7 @@ void VM::print_parse_line()
 	}
 }
 
-void VM::parse(std::string const & str)
+void VM::parse(std::string const & str, int line)
 {
 	std::regex rule1("^(push|assert) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)$");
 	std::regex rule2("^(pop|dump|add|sub|mul|div|mod|print|exit)$");
@@ -16,7 +16,7 @@ void VM::parse(std::string const & str)
 
 	if (std::regex_match(str, match, rule1))
 	{
-		std::cout << "Good string - type 1\n";
+		// std::cout << "Good string - type 1\n";
 
 		parse_line.push_back(match.str(1));
 		parse_line.push_back(match.str(2));
@@ -24,13 +24,14 @@ void VM::parse(std::string const & str)
 	}
 	else if (std::regex_match(str, match, rule2))
 	{
-		std::cout << "Good string - type 2\n";
+		// std::cout << "Good string - type 2\n";
 
 		parse_line.push_back(match.str(1));
 	}
 	else
 	{
-		std::cout << "Bad string\n";
+		// std::cout << "Bad string\n";
+		throw UnknownInstruction(str, line);
 		return ;
 	}
 
@@ -45,10 +46,17 @@ void VM::read_file(std::string const & str)
 		return ;
 
 	std::string line;
+	int			count = 1;
 	while (std::getline(in, line))
 	{
-		parse(line);
+		if (!line.size() || line[0] == ';')
+		{
+			++count;
+			continue ;
+		}
+		parse(line, count++);
 	}
+	throw NoExit();
 }
 
 void VM::execute()
@@ -216,4 +224,40 @@ void VM::Print()
 void VM::Exit()
 {
 	exit(0);
+}
+
+VM::UnknownInstruction::UnknownInstruction()
+: command("none"), line(0)
+{}
+
+VM::UnknownInstruction::UnknownInstruction(std::string command, int line)
+: command(command), line(line)
+{}
+
+VM::UnknownInstruction::UnknownInstruction(UnknownInstruction const & rv)
+: command(rv.command), line(rv.line)
+{}
+
+VM::UnknownInstruction::~UnknownInstruction() throw()
+{}
+
+VM::UnknownInstruction & VM::UnknownInstruction::operator=(VM::UnknownInstruction const & rv)
+{
+	if (this != &rv)
+	{
+		command = rv.command;
+		line = rv.line;
+	}
+	return *this;
+}
+
+const char* VM::UnknownInstruction::what() const throw()
+{
+	std::string out = "Unknown instruction \"" + command + "\" on the line " + std::to_string(line);
+	return out.c_str();
+}
+
+const char* VM::NoExit::what() const throw()
+{
+	return ("No exit command");
 }

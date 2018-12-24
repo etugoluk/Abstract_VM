@@ -8,9 +8,15 @@ std::stack<IOperand*> stack;
 int main(int argc, char **argv)
 {
 	VM vm;
-
-	if (argc == 2)
-		vm.read_file(argv[argc - 1]);
+	try
+	{
+		if (argc == 2)
+			vm.read_file(argv[argc - 1]);
+	}
+	catch(std::exception &e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 
 
 	// Factory f1;
