@@ -49,6 +49,22 @@ public:
 
 	};
 
+	class SmallStack : public std::exception
+	{
+	public:
+		std::string comment;
+
+		SmallStack();
+		SmallStack(std::string comment);
+		SmallStack(SmallStack const & rv);
+		~SmallStack() throw();
+		
+		SmallStack & operator=(SmallStack const & rv);
+
+		virtual const char *what() const throw();
+
+	};
+
 	class NoExit : public std::exception
 	{
 	public:

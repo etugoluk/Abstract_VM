@@ -111,9 +111,9 @@ void VM::Push(eOperandType type, std::string const & value)
 
 void VM::Pop()
 {
-	//check empty stack
-	if (stack.size() != 0)
-		stack.pop_back();
+	if (!stack.size())
+		throw SmallStack("Instruction pop on an empty stack");
+	stack.pop_back();
 }
 
 void VM::Dump()
@@ -139,11 +139,7 @@ void VM::Assert(eOperandType type, std::string const & value)
 void VM::Add()
 {
 	if (stack.size() < 2)
-	{
-		//error
-		std::cout << "Operation error!" << std::endl;
-		return ;
-	}
+		throw SmallStack("Instruction Add on strictly less that two values stack");
 	const IOperand* io1 = stack.back();
 	stack.pop_back();
 	const IOperand* io2 = stack.back();
@@ -155,11 +151,7 @@ void VM::Add()
 void VM::Sub()
 {
 	if (stack.size() < 2)
-	{
-		//error
-		std::cout << "Operation error!" << std::endl;
-		return ;
-	}
+		throw SmallStack("Instruction Sub on strictly less that two values stack");
 	const IOperand* io1 = stack.back();
 	stack.pop_back();
 	const IOperand* io2 = stack.back();
@@ -171,11 +163,7 @@ void VM::Sub()
 void VM::Mul()
 {
 	if (stack.size() < 2)
-	{
-		//error
-		std::cout << "Operation error!" << std::endl;
-		return ;
-	}
+		throw SmallStack("Instruction Mul on strictly less that two values stack");
 	const IOperand* io1 = stack.back();
 	stack.pop_back();
 	const IOperand* io2 = stack.back();
@@ -187,11 +175,7 @@ void VM::Mul()
 void VM::Div()
 {
 	if (stack.size() < 2)
-	{
-		//error
-		std::cout << "Operation error!" << std::endl;
-		return ;
-	}
+		throw SmallStack("Instruction Div on strictly less that two values stack");
 	const IOperand* io1 = stack.back();
 	stack.pop_back();
 	const IOperand* io2 = stack.back();
@@ -203,11 +187,7 @@ void VM::Div()
 void VM::Mod()
 {
 	if (stack.size() < 2)
-	{
-		//error
-		std::cout << "Operation error!" << std::endl;
-		return ;
-	}
+		throw SmallStack("Instruction Mod on strictly less that two values stack");
 	const IOperand* io1 = stack.back();
 	stack.pop_back();
 	const IOperand* io2 = stack.back();
@@ -255,6 +235,35 @@ const char* VM::UnknownInstruction::what() const throw()
 {
 	std::string out = "Unknown instruction \"" + command + "\" on the line " + std::to_string(line);
 	return out.c_str();
+}
+
+VM::SmallStack::SmallStack()
+: comment("none")
+{}
+
+VM::SmallStack::SmallStack(std::string comment)
+: comment(comment)
+{}
+
+VM::SmallStack::SmallStack(SmallStack const & rv)
+: comment(rv.comment)
+{}
+
+VM::SmallStack::~SmallStack() throw()
+{}
+
+VM::SmallStack & VM::SmallStack::operator=(VM::SmallStack const & rv)
+{
+	if (this != &rv)
+	{
+		comment = rv.comment;
+	}
+	return *this;
+}
+
+const char* VM::SmallStack::what() const throw()
+{
+	return comment.c_str();
 }
 
 const char* VM::NoExit::what() const throw()
