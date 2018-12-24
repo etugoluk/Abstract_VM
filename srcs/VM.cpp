@@ -21,6 +21,7 @@ void VM::parse(std::string const & str, int line)
 		parse_line.push_back(match.str(1));
 		parse_line.push_back(match.str(2));
 		parse_line.push_back(match.str(3));
+		// print_parse_line();
 	}
 	else if (std::regex_match(str, match, rule2))
 	{
@@ -131,8 +132,9 @@ void VM::Assert(eOperandType type, std::string const & value)
 	if (type != top->getType() ||
 		value.compare(top->toString()))
 	{
-		//error;
-		std::cout << "Assert error!" << std::endl;
+		std::cout << type << ';' << top->getType() << std::endl;
+		std::cout << value << ';' << top->toString() << std::endl;
+		throw AssertException();
 	}
 }
 
@@ -269,4 +271,9 @@ const char* VM::SmallStack::what() const throw()
 const char* VM::NoExit::what() const throw()
 {
 	return ("No exit command");
+}
+
+const char* VM::AssertException::what() const throw()
+{
+	return ("An Assert instruction is not true");
 }

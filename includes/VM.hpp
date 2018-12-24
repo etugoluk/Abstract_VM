@@ -70,6 +70,13 @@ public:
 	public:
 		virtual const char *what() const throw();
 	};
+
+	class AssertException : public std::exception
+	{
+	public:
+		virtual const char *what() const throw();
+	};
+
 };
 
 #endif

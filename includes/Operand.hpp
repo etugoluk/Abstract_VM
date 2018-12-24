@@ -51,8 +51,11 @@ public:
 	 // Product
 	IOperand const * operator/( IOperand const & rhs ) const
 	{
+		double znam = std::stod(rhs.toString());
+		if (!znam)
+			throw DivModByZero();
 		eOperandType max_type = std::max(this->getType(), rhs.getType());
-		double result = std::stod(this->toString()) / std::stod(rhs.toString());
+		double result = std::stod(this->toString()) / znam;
 		return Factory().createOperand(max_type, std::to_string(result));
 	}
 	 // Quotient
@@ -61,6 +64,9 @@ public:
 		eOperandType max_type = std::max(this->getType(), rhs.getType());
 		if (max_type > 2)
 			throw std::invalid_argument("bad type");
+		int znam = std::stoi(rhs.toString());
+		if (!znam)
+			throw DivModByZero();
 		int result = std::stoi(this->toString()) % std::stoi(rhs.toString());
 		return Factory().createOperand(max_type, std::to_string(result));
 	}
@@ -69,6 +75,15 @@ public:
 	{
 		return value_str;
 	}
+
+	class DivModByZero : public std::exception
+	{
+	public:
+		virtual const char *what() const throw()
+		{
+			return ("Division by zero!");
+		}
+	};
 };
 
 #endif

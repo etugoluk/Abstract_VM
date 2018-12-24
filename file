@@ -1,9 +1,9 @@
-push int32(123)
+push double(0)
+push double(123)
+div
 push double(5.7)
 dump
 ;
-;
-
 
 pop
 pop
