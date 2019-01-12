@@ -40,6 +40,23 @@ void VM::parse(std::string const & str, int line)
 	parse_line.clear();
 }
 
+void VM::read_console()
+{
+	std::vector<std::string> v;
+	std::string line;
+
+	while (std::getline(std::cin, line))
+	{
+		v.push_back(line);
+	}
+
+	int count = 1;
+	for (auto it = v.begin(); it != v.end(); ++it)
+	{
+		parse(*it, count++);
+	}
+}
+
 void VM::read_file(std::string const & str)
 {
 	std::ifstream in(str);

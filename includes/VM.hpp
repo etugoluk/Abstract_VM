@@ -27,6 +27,7 @@ public:
 
 	void print_parse_line();
 	void parse(std::string const & str, int line);
+	void read_console();
 	void read_file(std::string const & str);
 	void execute();
 
