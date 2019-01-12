@@ -17,25 +17,77 @@ IOperand const * Factory::createOperand(eOperandType type, std::string const & v
 
 IOperand const *Factory::createInt8( std::string const & value)  const
 {
-	return new Operand<int8_t>(static_cast<int8_t>(std::stoi(value)), Int8);
+	try
+	{
+		int res = std::stoi(value);
+
+		if (res > std::numeric_limits<int8_t>::max())
+			throw Overflow();
+		if (res < std::numeric_limits<int8_t>::min())
+			throw Overflow();
+		return new Operand<int8_t>(static_cast<int8_t>(res), Int8);
+	}
+	catch (std::exception &e)
+	{
+		throw Overflow();
+	}
 }
 
 IOperand const *Factory::createInt16( std::string const & value) const
 {
-	return new Operand<int16_t>(static_cast<int16_t>(std::stoi(value)), Int16);
+	try
+	{
+		int res = std::stoi(value);
+
+		if (res > std::numeric_limits<int16_t>::max())
+			throw Overflow();
+		if (res < std::numeric_limits<int16_t>::min())
+			throw Overflow();
+		return new Operand<int16_t>(static_cast<int16_t>(res), Int16);
+	}
+	catch (std::exception &e)
+	{
+		throw Overflow();
+	}
 }
 
 IOperand const *Factory::createInt32( std::string const & value) const
 {
-	return new Operand<int>(std::stoi(value), Int32);
+	try
+	{
+		return new Operand<int>(std::stoi(value), Int32);
+	}
+	catch (std::exception &e)
+	{
+		throw Overflow();
+	}
 }
 
 IOperand const *Factory::createFloat( std::string const & value) const
 {
-	return new Operand<float>(std::stof(value), Float);
+	try
+	{
+		return new Operand<float>(std::stof(value), Float);
+	}
+	catch (std::exception &e)
+	{
+		throw Overflow();
+	}
 }
 
 IOperand const *Factory::createDouble( std::string const & value) const
 {
-	return new Operand<double>(std::stod(value), Double);
+	try
+	{
+		return new Operand<double>(std::stod(value), Double);
+	}
+	catch (std::exception &e)
+	{
+		throw Overflow();
+	}
+}
+
+const char* Factory::Overflow::what() const throw()
+{
+	return ("Overflow exception");
 }

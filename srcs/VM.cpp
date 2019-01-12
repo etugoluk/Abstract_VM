@@ -47,6 +47,8 @@ void VM::read_console()
 
 	while (std::getline(std::cin, line))
 	{
+		if (line[0] == ';' && line[1] == ';')
+			break;
 		v.push_back(line);
 	}
 
@@ -132,10 +134,11 @@ void VM::Pop()
 	if (!stack.size())
 		throw SmallStack("Instruction pop on an empty stack");
 
-	const IOperand* top = stack.back();
-	stack.pop_back();
+	// const IOperand* top = stack.back();
+	// stack.pop_back();
 
-	delete top;
+	delete stack.back();
+	stack.pop_back();
 }
 
 void VM::Dump()
@@ -182,7 +185,7 @@ void VM::Sub()
 	const IOperand* io2 = stack.back();
 	stack.pop_back();
 
-	stack.push_back(*io1 - *io2);
+	stack.push_back(*io2 - *io1);
 
 	delete io1;
 	delete io2;
@@ -212,7 +215,7 @@ void VM::Div()
 	const IOperand* io2 = stack.back();
 	stack.pop_back();
 
-	stack.push_back(*io1 / *io2);
+	stack.push_back(*io2 / *io1);
 
 	delete io1;
 	delete io2;
@@ -227,7 +230,7 @@ void VM::Mod()
 	const IOperand* io2 = stack.back();
 	stack.pop_back();
 
-	stack.push_back(*io1 % *io2);
+	stack.push_back(*io2 % *io1);
 
 	delete io1;
 	delete io2;
@@ -244,7 +247,7 @@ void VM::Print()
 
 void VM::Exit()
 {
-	system("leaks avm");
+	// system("leaks avm");
 	exit(0);
 }
 
