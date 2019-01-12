@@ -132,8 +132,8 @@ void VM::Assert(eOperandType type, std::string const & value)
 	if (type != top->getType() ||
 		value.compare(top->toString()))
 	{
-		std::cout << type << ';' << top->getType() << std::endl;
-		std::cout << value << ';' << top->toString() << std::endl;
+		// std::cout << type << ';' << top->getType() << std::endl;
+		// std::cout << value << ';' << top->toString() << std::endl;
 		throw AssertException();
 	}
 }
@@ -200,7 +200,11 @@ void VM::Mod()
 
 void VM::Print()
 {
-	//???
+	const IOperand* top = stack.back();
+
+	if (top->getType())
+		throw AssertException();
+	std::cout << static_cast<char>(std::stoi(top->toString())) << std::endl;
 }
 
 void VM::Exit()
