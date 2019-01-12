@@ -154,8 +154,8 @@ void VM::Assert(eOperandType type, std::string const & value)
 	const IOperand* top = stack.back();
 	const IOperand* arg = Factory().createOperand(type, value);
 
-	if (arg->getType() != top->getType() ||
-		arg->toString().compare(top->toString()))
+	// if (arg->getType() != top->getType() ||
+	if (arg->toString().compare(top->toString()))
 		throw AssertException();
 
 	delete arg;

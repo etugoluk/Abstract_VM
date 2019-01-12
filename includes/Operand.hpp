@@ -2,6 +2,7 @@
 # define OPERAND_HPP
 
 #include "Factory.hpp"
+#include <sstream>
 
 template <class T>
 class Operand : public IOperand
@@ -12,8 +13,8 @@ class Operand : public IOperand
 
 public:
 	Operand();
-	Operand(T value, eOperandType type)
-	: value(value), value_str(std::to_string(value)), type(type) {}
+	Operand(T value, eOperandType type, std::string str)
+	: value(value), value_str(str), type(type) {}
 	Operand(Operand const &o);
 	Operand & operator=(Operand const &o);
 	~Operand() {}
@@ -32,21 +33,33 @@ public:
 	{
 		eOperandType max_type = std::max(this->getType(), rhs.getType());
 		double result = std::stod(this->toString()) + std::stod(rhs.toString());
-		return Factory().createOperand(max_type, std::to_string(result));
+
+		std::ostringstream ss;
+		ss << result;
+		return Factory().createOperand(max_type, ss.str());
+		// return Factory().createOperand(max_type, std::to_string(result));
 	}
 	 // Sum
 	IOperand const * operator-( IOperand const & rhs ) const
 	{
 		eOperandType max_type = std::max(this->getType(), rhs.getType());
 		double result = std::stod(this->toString()) - std::stod(rhs.toString());
-		return Factory().createOperand(max_type, std::to_string(result));
+
+		std::ostringstream ss;
+		ss << result;
+		return Factory().createOperand(max_type, ss.str());
+		// return Factory().createOperand(max_type, std::to_string(result));
 	}
 	 // Difference
 	IOperand const * operator*( IOperand const & rhs ) const
 	{
 		eOperandType max_type = std::max(this->getType(), rhs.getType());
 		double result = std::stod(this->toString()) * std::stod(rhs.toString());
-		return Factory().createOperand(max_type, std::to_string(result));
+
+		std::ostringstream ss;
+		ss << result;
+		return Factory().createOperand(max_type, ss.str());
+		// return Factory().createOperand(max_type, std::to_string(result));
 	}
 	 // Product
 	IOperand const * operator/( IOperand const & rhs ) const
@@ -56,7 +69,11 @@ public:
 			throw DivModByZero();
 		eOperandType max_type = std::max(this->getType(), rhs.getType());
 		double result = std::stod(this->toString()) / znam;
-		return Factory().createOperand(max_type, std::to_string(result));
+
+		std::ostringstream ss;
+		ss << result;
+		return Factory().createOperand(max_type, ss.str());
+		// return Factory().createOperand(max_type, std::to_string(result));
 	}
 	 // Quotient
 	IOperand const * operator%( IOperand const & rhs ) const
@@ -68,7 +85,11 @@ public:
 		if (!znam)
 			throw DivModByZero();
 		int result = std::stoi(this->toString()) % std::stoi(rhs.toString());
-		return Factory().createOperand(max_type, std::to_string(result));
+
+		std::ostringstream ss;
+		ss << result;
+		return Factory().createOperand(max_type, ss.str());
+		// return Factory().createOperand(max_type, std::to_string(result));
 	}
 	 // Modulo
 	std::string const & toString(void) const // String representation of the instance

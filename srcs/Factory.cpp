@@ -25,7 +25,7 @@ IOperand const *Factory::createInt8( std::string const & value)  const
 			throw Overflow();
 		if (res < std::numeric_limits<int8_t>::min())
 			throw Overflow();
-		return new Operand<int8_t>(static_cast<int8_t>(res), Int8);
+		return new Operand<int8_t>(static_cast<int8_t>(res), Int8, value);
 	}
 	catch (std::exception &e)
 	{
@@ -43,7 +43,7 @@ IOperand const *Factory::createInt16( std::string const & value) const
 			throw Overflow();
 		if (res < std::numeric_limits<int16_t>::min())
 			throw Overflow();
-		return new Operand<int16_t>(static_cast<int16_t>(res), Int16);
+		return new Operand<int16_t>(static_cast<int16_t>(res), Int16, value);
 	}
 	catch (std::exception &e)
 	{
@@ -55,7 +55,7 @@ IOperand const *Factory::createInt32( std::string const & value) const
 {
 	try
 	{
-		return new Operand<int>(std::stoi(value), Int32);
+		return new Operand<int>(std::stoi(value), Int32, value);
 	}
 	catch (std::exception &e)
 	{
@@ -67,7 +67,7 @@ IOperand const *Factory::createFloat( std::string const & value) const
 {
 	try
 	{
-		return new Operand<float>(std::stof(value), Float);
+		return new Operand<float>(std::stof(value), Float, value);
 	}
 	catch (std::exception &e)
 	{
@@ -79,7 +79,7 @@ IOperand const *Factory::createDouble( std::string const & value) const
 {
 	try
 	{
-		return new Operand<double>(std::stod(value), Double);
+		return new Operand<double>(std::stod(value), Double, value);
 	}
 	catch (std::exception &e)
 	{
