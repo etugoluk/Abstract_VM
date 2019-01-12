@@ -10,8 +10,8 @@ void VM::print_parse_line()
 
 void VM::parse(std::string const & str, int line)
 {
-	std::regex rule1("^(push|assert) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)$");
-	std::regex rule2("^(pop|dump|add|sub|mul|div|mod|print|exit)$");
+	std::regex rule1("^(push|assert) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)(\\s)*(;.*)*$");
+	std::regex rule2("^(pop|dump|add|sub|mul|div|mod|print|exit)(\\s)*(;.*)*$");
 	std::smatch match;
 
 	if (std::regex_match(str, match, rule1))
