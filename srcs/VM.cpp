@@ -131,7 +131,11 @@ void VM::Pop()
 {
 	if (!stack.size())
 		throw SmallStack("Instruction pop on an empty stack");
+
+	const IOperand* top = stack.back();
 	stack.pop_back();
+
+	delete top;
 }
 
 void VM::Dump()
@@ -145,14 +149,13 @@ void VM::Dump()
 void VM::Assert(eOperandType type, std::string const & value)
 {
 	const IOperand* top = stack.back();
+	const IOperand* arg = Factory().createOperand(type, value);
 
-	if (type != top->getType() ||
-		value.compare(top->toString()))
-	{
-		// std::cout << type << ';' << top->getType() << std::endl;
-		// std::cout << value << ';' << top->toString() << std::endl;
+	if (arg->getType() != top->getType() ||
+		arg->toString().compare(top->toString()))
 		throw AssertException();
-	}
+
+	delete arg;
 }
 
 void VM::Add()
@@ -165,6 +168,9 @@ void VM::Add()
 	stack.pop_back();
 
 	stack.push_back(*io1 + *io2);
+
+	delete io1;
+	delete io2;
 }
 
 void VM::Sub()
@@ -177,6 +183,9 @@ void VM::Sub()
 	stack.pop_back();
 
 	stack.push_back(*io1 - *io2);
+
+	delete io1;
+	delete io2;
 }
 
 void VM::Mul()
@@ -189,6 +198,9 @@ void VM::Mul()
 	stack.pop_back();
 
 	stack.push_back(*io1 * *io2);
+
+	delete io1;
+	delete io2;
 }
 
 void VM::Div()
@@ -201,6 +213,9 @@ void VM::Div()
 	stack.pop_back();
 
 	stack.push_back(*io1 / *io2);
+
+	delete io1;
+	delete io2;
 }
 
 void VM::Mod()
@@ -213,6 +228,9 @@ void VM::Mod()
 	stack.pop_back();
 
 	stack.push_back(*io1 % *io2);
+
+	delete io1;
+	delete io2;
 }
 
 void VM::Print()
@@ -226,6 +244,7 @@ void VM::Print()
 
 void VM::Exit()
 {
+	system("leaks avm");
 	exit(0);
 }
 

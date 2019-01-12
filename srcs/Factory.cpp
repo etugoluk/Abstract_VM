@@ -17,25 +17,25 @@ IOperand const * Factory::createOperand(eOperandType type, std::string const & v
 
 IOperand const *Factory::createInt8( std::string const & value)  const
 {
-	return new Operand<int8_t>(static_cast<int8_t>(std::stoi(value)), Int8, value);
+	return new Operand<int8_t>(static_cast<int8_t>(std::stoi(value)), Int8);
 }
 
 IOperand const *Factory::createInt16( std::string const & value) const
 {
-	return new Operand<int16_t>(static_cast<int16_t>(std::stoi(value)), Int16, value);
+	return new Operand<int16_t>(static_cast<int16_t>(std::stoi(value)), Int16);
 }
 
 IOperand const *Factory::createInt32( std::string const & value) const
 {
-	return new Operand<int>(std::stoi(value), Int32, value);
+	return new Operand<int>(std::stoi(value), Int32);
 }
 
 IOperand const *Factory::createFloat( std::string const & value) const
 {
-	return new Operand<float>(std::stof(value), Float, value);
+	return new Operand<float>(std::stof(value), Float);
 }
 
 IOperand const *Factory::createDouble( std::string const & value) const
 {
-	return new Operand<double>(std::stod(value), Double, value);
+	return new Operand<double>(std::stod(value), Double);
 }

@@ -12,8 +12,8 @@ class Operand : public IOperand
 
 public:
 	Operand();
-	Operand(T value, eOperandType type, std::string const & str)
-	: value(value), value_str(str), type(type) {}
+	Operand(T value, eOperandType type)
+	: value(value), value_str(std::to_string(value)), type(type) {}
 	Operand(Operand const &o);
 	Operand & operator=(Operand const &o);
 	~Operand() {}
