@@ -78,6 +78,20 @@ public:
 		virtual const char *what() const throw();
 	};
 
+	class BadArgumentsException : public std::exception
+	{
+	public:
+		virtual const char *what() const throw();
+	};
+
+	class BadFileException : public std::exception
+	{
+	public:
+		std::string comment;
+		BadFileException(std::string comment);
+		virtual const char *what() const throw();
+	};
+
 };
 
 #endif

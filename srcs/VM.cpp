@@ -1,4 +1,7 @@
 #include "../includes/VM.hpp"
+#include <sys/stat.h>
+// #include <sys/types.h>
+#include <unistd.h>
 
 void VM::print_parse_line()
 {
@@ -61,12 +64,19 @@ void VM::read_console()
 
 void VM::read_file(std::string const & str)
 {
-	std::ifstream in(str);
-	if (!in.is_open())
-		return ;
+	struct stat status;
 
+	if (stat(str.c_str(), &status) == -1)
+		throw BadFileException(str + ": No such file or directory");
+	else if (S_ISDIR(status.st_mode))
+		throw BadFileException(str + ": is a directory");
+	else if (access(str.c_str(), R_OK) == -1)
+		throw BadFileException(str + ": Permission denied");
+
+	std::ifstream in(str);
 	std::string line;
 	int			count = 1;
+
 	while (std::getline(in, line))
 	{
 		if (!line.size() || line[0] == ';')
@@ -319,4 +329,20 @@ const char* VM::NoExit::what() const throw()
 const char* VM::AssertException::what() const throw()
 {
 	return ("An Assert instruction is not true");
+}
+
+const char* VM::BadArgumentsException::what() const throw()
+{
+	return ("Too much arguments.\nUsage: ./avm [file_name]");
+}
+
+VM::BadFileException::BadFileException(std::string comment)
+: comment(comment)
+{}
+
+const char* VM::BadFileException::what() const throw()
+{
+	std::string out = comment + "\n" + "Usage: ./avm [file_name]";
+	return out.c_str();
+	// return ("Wrong file.\nUsage: ./avm [file_name]");
 }
