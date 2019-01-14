@@ -3,6 +3,7 @@
 #define FACTORY_HPP
 
 #include "IOperand.hpp"
+#include "Exception.hpp"
 
 class Factory
 {
@@ -17,11 +18,6 @@ public:
 	IOperand const * createFloat( std::string const & value ) const;
 	IOperand const * createDouble( std::string const & value ) const;
 
-	class Overflow : public std::exception
-	{
-	public:
-		virtual const char *what() const throw();
-	};
 };
 
 #endif

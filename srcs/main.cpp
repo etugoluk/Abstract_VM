@@ -1,7 +1,5 @@
 
 #include "../includes/VM.hpp"
-// #include "../includes/Operand.hpp"
-// #include "../includes/Factory.hpp"
 
 int main(int argc, char **argv)
 {
@@ -14,16 +12,7 @@ int main(int argc, char **argv)
 		else if (argc == 2)
 			vm.read_file(argv[1]);
 		else
-		{
-			throw VM::BadArgumentsException();
-		}
-		// else
-		// {
-		// 	for (int i = 1; i < argc; ++i)
-		// 	{
-		// 		vm.read_file(argv[i]);
-		// 	}
-		// }
+			throw BadArgumentsException();
 	}
 	catch (std::exception &e)
 	{

@@ -11,6 +11,7 @@ class VM
 {
 	std::deque<const IOperand*> stack;
 	std::vector<std::string> parse_line;
+	Factory f;
 
 public:
 	void Push(eOperandType type, std::string const & value);
@@ -25,13 +26,11 @@ public:
 	void Print();
 	void Exit();
 
-	void print_parse_line();
+	// void print_parse_line();
 	void parse(std::string const & str, int line);
 	void read_console();
 	void read_file(std::string const & str);
 	void execute();
-
-	Factory f;
 
 	class UnknownInstruction : public std::exception
 	{
@@ -52,9 +51,8 @@ public:
 
 	class SmallStack : public std::exception
 	{
-	public:
 		std::string comment;
-
+	public:
 		SmallStack();
 		SmallStack(std::string comment);
 		SmallStack(SmallStack const & rv);
@@ -63,7 +61,6 @@ public:
 		SmallStack & operator=(SmallStack const & rv);
 
 		virtual const char *what() const throw();
-
 	};
 
 	class NoExit : public std::exception
@@ -75,20 +72,6 @@ public:
 	class AssertException : public std::exception
 	{
 	public:
-		virtual const char *what() const throw();
-	};
-
-	class BadArgumentsException : public std::exception
-	{
-	public:
-		virtual const char *what() const throw();
-	};
-
-	class BadFileException : public std::exception
-	{
-	public:
-		std::string comment;
-		BadFileException(std::string comment);
 		virtual const char *what() const throw();
 	};
 

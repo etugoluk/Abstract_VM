@@ -31,15 +31,21 @@ public:
 
 	IOperand const * operator+( IOperand const & rhs ) const
 	{
-		eOperandType max_type = std::max(this->getType(), rhs.getType());
-		double result = std::stod(this->toString()) + std::stod(rhs.toString());
+		try
+		{
+			eOperandType max_type = std::max(this->getType(), rhs.getType());
+			double result = std::stod(this->toString()) + std::stod(rhs.toString());
 
-		std::ostringstream ss;
-		ss << result;
-		return Factory().createOperand(max_type, ss.str());
-		// return Factory().createOperand(max_type, std::to_string(result));
+			std::ostringstream ss;
+			ss << result;
+			return Factory().createOperand(max_type, ss.str());
+		}
+		catch (std::exception &e)
+		{
+			throw Overflow();
+		}
 	}
-	 // Sum
+
 	IOperand const * operator-( IOperand const & rhs ) const
 	{
 		eOperandType max_type = std::max(this->getType(), rhs.getType());
@@ -97,14 +103,6 @@ public:
 		return value_str;
 	}
 
-	class DivModByZero : public std::exception
-	{
-	public:
-		virtual const char *what() const throw()
-		{
-			return ("Division by zero!");
-		}
-	};
 };
 
 #endif

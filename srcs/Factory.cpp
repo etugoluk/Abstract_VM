@@ -86,8 +86,3 @@ IOperand const *Factory::createDouble( std::string const & value) const
 		throw Overflow();
 	}
 }
-
-const char* Factory::Overflow::what() const throw()
-{
-	return ("Overflow exception");
-}

@@ -1,15 +1,14 @@
 #include "../includes/VM.hpp"
 #include <sys/stat.h>
-// #include <sys/types.h>
 #include <unistd.h>
 
-void VM::print_parse_line()
-{
-	for (auto it = parse_line.begin(); it != parse_line.end(); ++it)
-	{
-		std::cout << *it << std::endl;
-	}
-}
+// void VM::print_parse_line()
+// {
+// 	for (auto it = parse_line.begin(); it != parse_line.end(); ++it)
+// 	{
+// 		std::cout << *it << std::endl;
+// 	}
+// }
 
 void VM::parse(std::string const & str, int line)
 {
@@ -20,7 +19,6 @@ void VM::parse(std::string const & str, int line)
 	if (std::regex_match(str, match, rule1))
 	{
 		// std::cout << "Good string - type 1\n";
-
 		parse_line.push_back(match.str(1));
 		parse_line.push_back(match.str(2));
 		parse_line.push_back(match.str(3));
@@ -29,15 +27,10 @@ void VM::parse(std::string const & str, int line)
 	else if (std::regex_match(str, match, rule2))
 	{
 		// std::cout << "Good string - type 2\n";
-
 		parse_line.push_back(match.str(1));
 	}
 	else
-	{
-		// std::cout << "Bad string\n";
 		throw UnknownInstruction(str, line);
-		return ;
-	}
 
 	execute();
 	parse_line.clear();
@@ -329,20 +322,4 @@ const char* VM::NoExit::what() const throw()
 const char* VM::AssertException::what() const throw()
 {
 	return ("An Assert instruction is not true");
-}
-
-const char* VM::BadArgumentsException::what() const throw()
-{
-	return ("Too much arguments.\nUsage: ./avm [file_name]");
-}
-
-VM::BadFileException::BadFileException(std::string comment)
-: comment(comment)
-{}
-
-const char* VM::BadFileException::what() const throw()
-{
-	std::string out = comment + "\n" + "Usage: ./avm [file_name]";
-	return out.c_str();
-	// return ("Wrong file.\nUsage: ./avm [file_name]");
 }
