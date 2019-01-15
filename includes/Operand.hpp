@@ -22,12 +22,12 @@ public:
 	int getPrecision( void ) const
 	{
 		return type;
-	} // Precision of the type of the instance
+	}
 
 	eOperandType getType( void ) const
 	{
 		return type;
-	} // Type of the instance
+	}
 
 	IOperand const * operator+( IOperand const & rhs ) const
 	{
@@ -62,7 +62,7 @@ public:
 			throw Overflow();
 		}
 	}
-	 // Difference
+
 	IOperand const * operator*( IOperand const & rhs ) const
 	{
 		try
@@ -79,7 +79,7 @@ public:
 			throw Overflow();
 		}
 	}
-	 // Product
+
 	IOperand const * operator/( IOperand const & rhs ) const
 	{
 		try
@@ -99,7 +99,7 @@ public:
 			throw Overflow();
 		}
 	}
-	 // Quotient
+
 	IOperand const * operator%( IOperand const & rhs ) const
 	{
 		try
@@ -121,8 +121,8 @@ public:
 			throw Overflow();
 		}
 	}
-	 // Modulo
-	std::string const & toString(void) const // String representation of the instance
+
+	std::string const & toString(void) const
 	{
 		return value_str;
 	}

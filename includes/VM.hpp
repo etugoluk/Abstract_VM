@@ -26,35 +26,15 @@ public:
 	void Mod();
 	void Print();
 	void Exit();
-
 	void AssertType(eOperandType type, std::string const & value);
 	void More(eOperandType type, std::string const & value);
 	void Less(eOperandType type, std::string const & value);
 
-	// void print_parse_line();
-	// void lexer(std::string const & str, int line);
 	void parser(std::string const & str, int line);
 	void read_console();
 	void read_file(std::string const & str);
 
 	void execute();
-
-	class UnknownInstruction : public std::exception
-	{
-	public:
-		std::string command;
-		int			line;
-
-		UnknownInstruction();
-		UnknownInstruction(std::string command, int line);
-		UnknownInstruction(UnknownInstruction const & rv);
-		~UnknownInstruction() throw();
-		
-		UnknownInstruction & operator=(UnknownInstruction const & rv);
-
-		virtual const char *what() const throw();
-
-	};
 
 	class SmallStack : public std::exception
 	{

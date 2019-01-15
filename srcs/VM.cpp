@@ -2,14 +2,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-// void VM::print_parse_line()
-// {
-// 	for (auto it = parse_line.begin(); it != parse_line.end(); ++it)
-// 	{
-// 		std::cout << *it << std::endl;
-// 	}
-// }
-
 void VM::parser(std::string const & str, int line)
 {
 	try
@@ -151,9 +143,6 @@ void VM::Pop()
 	if (!stack.size())
 		throw SmallStack("Instruction pop on an empty stack");
 
-	// const IOperand* top = stack.back();
-	// stack.pop_back();
-
 	delete stack.back();
 	stack.pop_back();
 }
@@ -174,7 +163,6 @@ void VM::Assert(eOperandType type, std::string const & value)
 	const IOperand* top = stack.back();
 	const IOperand* arg = Factory().createOperand(type, value);
 
-	// if (arg->getType() != top->getType() ||
 	if (arg->toString().compare(top->toString()))
 		throw AssertException("An assert instruction is not true");
 
@@ -263,7 +251,7 @@ void VM::Print()
 	const IOperand* top = stack.back();
 
 	if (top->getType())
-		throw PrintException(); //need print exception
+		throw PrintException();
 	std::cout << static_cast<char>(std::stoi(top->toString())) << std::endl;
 }
 
@@ -319,38 +307,6 @@ void VM::Less(eOperandType type, std::string const & value)
 	delete arg;
 
 	std::cout << "\033[32mA less instruction is true\033[0m" << std::endl;
-}
-
-
-VM::UnknownInstruction::UnknownInstruction()
-: command("none"), line(0)
-{}
-
-VM::UnknownInstruction::UnknownInstruction(std::string command, int line)
-: command(command), line(line)
-{}
-
-VM::UnknownInstruction::UnknownInstruction(UnknownInstruction const & rv)
-: command(rv.command), line(rv.line)
-{}
-
-VM::UnknownInstruction::~UnknownInstruction() throw()
-{}
-
-VM::UnknownInstruction & VM::UnknownInstruction::operator=(VM::UnknownInstruction const & rv)
-{
-	if (this != &rv)
-	{
-		command = rv.command;
-		line = rv.line;
-	}
-	return *this;
-}
-
-const char* VM::UnknownInstruction::what() const throw()
-{
-	std::string out = "\033[31mUnknown instruction (line "+ std::to_string(line) + ") : \"" + command + "\"\033[0m";
-	return out.c_str();
 }
 
 VM::SmallStack::SmallStack()
