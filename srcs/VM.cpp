@@ -16,11 +16,11 @@ void VM::parse(std::string const & str, int line)
 	{
 		std::smatch match;
 
-		std::regex is_cmnd1("(.)*(push|assert)(.)*");
+		std::regex is_cmnd1("(.)*(push|assert|asserttype|more|less)(.)*");
 		std::regex is_cmnd2("(.)*(pop|dump|add|sub|mul|div|mod|print|exit)(.)*");
-		std::regex cmnd_begin_line("^(push|assert|pop|dump|add|sub|mul|div|mod|print|exit)(.)*");
-		std::regex is_arg("^(push|assert)(\\s)+(int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)(.)*$");
-		std::regex is_space("^(push|assert) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)(.)*$");
+		std::regex cmnd_begin_line("^(push|assert|pop|dump|add|sub|mul|div|mod|print|exit|asserttype|more|less)(.)*");
+		std::regex is_arg("^(push|assert|asserttype|more|less)(\\s)+(int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)(.)*$");
+		std::regex is_space("^(push|assert|asserttype|more|less) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)(.)*$");
 
 		if (!std::regex_match(str, match, is_cmnd1) && !std::regex_match(str, match, is_cmnd2))
 			throw UnknownInstruction(str, line);
@@ -31,7 +31,7 @@ void VM::parse(std::string const & str, int line)
 		if (std::regex_match(str, match, is_cmnd1) && !std::regex_match(str, match, is_space))
 			throw LexerException("Between command and argument should be only one space.", line);
 
-		std::regex rule1("^(push|assert) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)((\\s)*;.*)*$");
+		std::regex rule1("^(push|assert|asserttype|more|less) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)((\\s)*;.*)*$");
 		std::regex rule2("^(pop|dump|add|sub|mul|div|mod|print|exit)((\\s)*;.*)*$");
 
 		std::regex is_integer_type("(int8|int16|int32)");
@@ -139,8 +139,14 @@ void VM::execute()
 			e = Float;
 		if (!parse_line[0].compare("push"))
 			Push(e, parse_line[2]);
-		else
+		else if (!parse_line[0].compare("assert"))
 			Assert(e, parse_line[2]);
+		else if (!parse_line[0].compare("asserttype"))
+			AssertType(e, parse_line[2]);
+		else if (!parse_line[0].compare("more"))
+			More(e, parse_line[2]);
+		else if (!parse_line[0].compare("less"))
+			Less(e, parse_line[2]);
 	}
 	else if (parse_line.size() == 1)
 	{
@@ -161,9 +167,7 @@ void VM::execute()
 		else if (!parse_line[0].compare("print"))
 			Print();
 		else if (!parse_line[0].compare("exit"))
-		{
 			Exit();
-		}
 	}
 }
 
@@ -194,6 +198,9 @@ void VM::Dump()
 
 void VM::Assert(eOperandType type, std::string const & value)
 {
+	if (!stack.size())
+		throw SmallStack("Instruction assert on an empty stack");
+
 	const IOperand* top = stack.back();
 	const IOperand* arg = Factory().createOperand(type, value);
 
@@ -202,6 +209,8 @@ void VM::Assert(eOperandType type, std::string const & value)
 		throw AssertException();
 
 	delete arg;
+
+	std::cout << "\033[32mAn assert instruction is true\033[0m" << std::endl;
 }
 
 void VM::Add()
@@ -293,6 +302,55 @@ void VM::Exit()
 	// system("leaks avm");
 	exit(0);
 }
+
+void VM::AssertType(eOperandType type, std::string const & value)
+{
+	if (!stack.size())
+		throw SmallStack("Instruction asserttype on an empty stack");
+
+	const IOperand* top = stack.back();
+	const IOperand* arg = Factory().createOperand(type, value);
+
+	if (arg->getType() != top->getType())
+		throw AssertException();
+
+	delete arg;
+
+	std::cout << "\033[32mAn asserttype instruction is true\033[0m" << std::endl;
+}
+
+void VM::More(eOperandType type, std::string const & value)
+{
+	if (!stack.size())
+		throw SmallStack("Instruction more on an empty stack");
+
+	const IOperand* top = stack.back();
+	const IOperand* arg = Factory().createOperand(type, value);
+
+	if (arg->toString().compare(top->toString()) <= 0)
+		throw AssertException();
+
+	delete arg;
+
+	std::cout << "\033[32mA more instruction is true\033[0m" << std::endl;
+}
+
+void VM::Less(eOperandType type, std::string const & value)
+{
+	if (!stack.size())
+		throw SmallStack("Instruction less on an empty stack");
+
+	const IOperand* top = stack.back();
+	const IOperand* arg = Factory().createOperand(type, value);
+
+	if (arg->toString().compare(top->toString()) >= 0)
+		throw AssertException();
+
+	delete arg;
+
+	std::cout << "\033[32mA less instruction is true\033[0m" << std::endl;
+}
+
 
 VM::UnknownInstruction::UnknownInstruction()
 : command("none"), line(0)

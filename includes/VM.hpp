@@ -26,6 +26,10 @@ public:
 	void Print();
 	void Exit();
 
+	void AssertType(eOperandType type, std::string const & value);
+	void More(eOperandType type, std::string const & value);
+	void Less(eOperandType type, std::string const & value);
+
 	// void print_parse_line();
 	void parse(std::string const & str, int line);
 	void read_console();
