@@ -22,14 +22,14 @@ IOperand const *Factory::createInt8( std::string const & value)  const
 		int res = std::stoi(value);
 
 		if (res > std::numeric_limits<int8_t>::max())
-			throw Overflow();
+			throw Overflow(value);
 		if (res < std::numeric_limits<int8_t>::min())
-			throw Overflow();
+			throw Overflow(value);
 		return new Operand<int8_t>(static_cast<int8_t>(res), Int8, value);
 	}
 	catch (std::exception &e)
 	{
-		throw Overflow();
+		throw Overflow(value);
 	}
 }
 
@@ -40,14 +40,14 @@ IOperand const *Factory::createInt16( std::string const & value) const
 		int res = std::stoi(value);
 
 		if (res > std::numeric_limits<int16_t>::max())
-			throw Overflow();
+			throw Overflow(value);
 		if (res < std::numeric_limits<int16_t>::min())
-			throw Overflow();
+			throw Overflow(value);
 		return new Operand<int16_t>(static_cast<int16_t>(res), Int16, value);
 	}
 	catch (std::exception &e)
 	{
-		throw Overflow();
+		throw Overflow(value);
 	}
 }
 
@@ -59,7 +59,7 @@ IOperand const *Factory::createInt32( std::string const & value) const
 	}
 	catch (std::exception &e)
 	{
-		throw Overflow();
+		throw Overflow(value);
 	}
 }
 
@@ -71,7 +71,7 @@ IOperand const *Factory::createFloat( std::string const & value) const
 	}
 	catch (std::exception &e)
 	{
-		throw Overflow();
+		throw Overflow(value);
 	}
 }
 
@@ -83,6 +83,6 @@ IOperand const *Factory::createDouble( std::string const & value) const
 	}
 	catch (std::exception &e)
 	{
-		throw Overflow();
+		throw Overflow(value);
 	}
 }

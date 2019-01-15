@@ -31,57 +31,55 @@ public:
 
 	IOperand const * operator+( IOperand const & rhs ) const
 	{
+		std::ostringstream ss;
 		try
 		{
 			eOperandType max_type = std::max(this->getType(), rhs.getType());
 			double result = std::stod(this->toString()) + std::stod(rhs.toString());
-
-			std::ostringstream ss;
 			ss << result;
 			return Factory().createOperand(max_type, ss.str());
 		}
 		catch (std::exception &e)
 		{
-			throw Overflow();
+			throw Overflow(ss.str());
 		}
 	}
 
 	IOperand const * operator-( IOperand const & rhs ) const
 	{
+		std::ostringstream ss;
 		try
 		{
 			eOperandType max_type = std::max(this->getType(), rhs.getType());
 			double result = std::stod(this->toString()) - std::stod(rhs.toString());
-
-			std::ostringstream ss;
 			ss << result;
 			return Factory().createOperand(max_type, ss.str());
 		}
 		catch (std::exception &e)
 		{
-			throw Overflow();
+			throw Overflow(ss.str());
 		}
 	}
 
 	IOperand const * operator*( IOperand const & rhs ) const
 	{
+		std::ostringstream ss;
 		try
 		{
 			eOperandType max_type = std::max(this->getType(), rhs.getType());
 			double result = std::stod(this->toString()) * std::stod(rhs.toString());
-
-			std::ostringstream ss;
 			ss << result;
 			return Factory().createOperand(max_type, ss.str());
 		}
 		catch (std::exception &e)
 		{
-			throw Overflow();
+			throw Overflow(ss.str());
 		}
 	}
 
 	IOperand const * operator/( IOperand const & rhs ) const
 	{
+		std::ostringstream ss;
 		try
 		{
 			double znam = std::stod(rhs.toString());
@@ -89,19 +87,18 @@ public:
 				throw DivModByZero();
 			eOperandType max_type = std::max(this->getType(), rhs.getType());
 			double result = std::stod(this->toString()) / znam;
-
-			std::ostringstream ss;
 			ss << result;
 			return Factory().createOperand(max_type, ss.str());
 		}
 		catch (std::exception &e)
 		{
-			throw Overflow();
+			throw Overflow(ss.str());
 		}
 	}
 
 	IOperand const * operator%( IOperand const & rhs ) const
 	{
+		std::ostringstream ss;
 		try
 		{
 			eOperandType max_type = std::max(this->getType(), rhs.getType());
@@ -111,14 +108,12 @@ public:
 			if (!znam)
 				throw DivModByZero();
 			int result = std::stoi(this->toString()) % std::stoi(rhs.toString());
-
-			std::ostringstream ss;
 			ss << result;
 			return Factory().createOperand(max_type, ss.str());
 		}
 		catch (std::exception &e)
 		{
-			throw Overflow();
+			throw Overflow(ss.str());
 		}
 	}
 

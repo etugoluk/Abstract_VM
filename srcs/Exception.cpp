@@ -1,8 +1,33 @@
 #include "../includes/Exception.hpp"
 
+Overflow::Overflow()
+: value("0")
+{}
+
+Overflow::Overflow(std::string value)
+: value(value)
+{}
+
+Overflow::Overflow(Overflow const & rv)
+: value(rv.value)
+{}
+
+Overflow::~Overflow() throw()
+{}
+
+Overflow & Overflow::operator=(Overflow const & rv)
+{
+	if (this != &rv)
+	{
+		value = rv.value;
+	}
+	return *this;
+}
+
 const char* Overflow::what() const throw()
 {
-	return ("\033[31mOverflow happened\033[0m");
+	std::string out = "\033[31mOverflow of the value: " + value + "\033[0m";
+	return out.c_str();
 }
 
 const char* DivModByZero::what() const throw()

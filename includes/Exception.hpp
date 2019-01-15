@@ -5,7 +5,15 @@
 
 class Overflow : public std::exception
 {
+	std::string value;
 public:
+	Overflow();
+	Overflow(std::string value);
+	Overflow(Overflow const & rv);
+	~Overflow() throw();
+	
+	Overflow & operator=(Overflow const & rv);
+
 	virtual const char *what() const throw();
 };
 
