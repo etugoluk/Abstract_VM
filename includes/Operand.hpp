@@ -48,54 +48,78 @@ public:
 
 	IOperand const * operator-( IOperand const & rhs ) const
 	{
-		eOperandType max_type = std::max(this->getType(), rhs.getType());
-		double result = std::stod(this->toString()) - std::stod(rhs.toString());
+		try
+		{
+			eOperandType max_type = std::max(this->getType(), rhs.getType());
+			double result = std::stod(this->toString()) - std::stod(rhs.toString());
 
-		std::ostringstream ss;
-		ss << result;
-		return Factory().createOperand(max_type, ss.str());
-		// return Factory().createOperand(max_type, std::to_string(result));
+			std::ostringstream ss;
+			ss << result;
+			return Factory().createOperand(max_type, ss.str());
+		}
+		catch (std::exception &e)
+		{
+			throw Overflow();
+		}
 	}
 	 // Difference
 	IOperand const * operator*( IOperand const & rhs ) const
 	{
-		eOperandType max_type = std::max(this->getType(), rhs.getType());
-		double result = std::stod(this->toString()) * std::stod(rhs.toString());
+		try
+		{
+			eOperandType max_type = std::max(this->getType(), rhs.getType());
+			double result = std::stod(this->toString()) * std::stod(rhs.toString());
 
-		std::ostringstream ss;
-		ss << result;
-		return Factory().createOperand(max_type, ss.str());
-		// return Factory().createOperand(max_type, std::to_string(result));
+			std::ostringstream ss;
+			ss << result;
+			return Factory().createOperand(max_type, ss.str());
+		}
+		catch (std::exception &e)
+		{
+			throw Overflow();
+		}
 	}
 	 // Product
 	IOperand const * operator/( IOperand const & rhs ) const
 	{
-		double znam = std::stod(rhs.toString());
-		if (!znam)
-			throw DivModByZero();
-		eOperandType max_type = std::max(this->getType(), rhs.getType());
-		double result = std::stod(this->toString()) / znam;
+		try
+		{
+			double znam = std::stod(rhs.toString());
+			if (!znam)
+				throw DivModByZero();
+			eOperandType max_type = std::max(this->getType(), rhs.getType());
+			double result = std::stod(this->toString()) / znam;
 
-		std::ostringstream ss;
-		ss << result;
-		return Factory().createOperand(max_type, ss.str());
-		// return Factory().createOperand(max_type, std::to_string(result));
+			std::ostringstream ss;
+			ss << result;
+			return Factory().createOperand(max_type, ss.str());
+		}
+		catch (std::exception &e)
+		{
+			throw Overflow();
+		}
 	}
 	 // Quotient
 	IOperand const * operator%( IOperand const & rhs ) const
 	{
-		eOperandType max_type = std::max(this->getType(), rhs.getType());
-		if (max_type > 2)
-			throw std::invalid_argument("bad type");
-		int znam = std::stoi(rhs.toString());
-		if (!znam)
-			throw DivModByZero();
-		int result = std::stoi(this->toString()) % std::stoi(rhs.toString());
+		try
+		{
+			eOperandType max_type = std::max(this->getType(), rhs.getType());
+			if (max_type > 2)
+				throw std::invalid_argument("bad type");
+			int znam = std::stoi(rhs.toString());
+			if (!znam)
+				throw DivModByZero();
+			int result = std::stoi(this->toString()) % std::stoi(rhs.toString());
 
-		std::ostringstream ss;
-		ss << result;
-		return Factory().createOperand(max_type, ss.str());
-		// return Factory().createOperand(max_type, std::to_string(result));
+			std::ostringstream ss;
+			ss << result;
+			return Factory().createOperand(max_type, ss.str());
+		}
+		catch (std::exception &e)
+		{
+			throw Overflow();
+		}
 	}
 	 // Modulo
 	std::string const & toString(void) const // String representation of the instance

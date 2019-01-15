@@ -12,28 +12,64 @@
 
 void VM::parse(std::string const & str, int line)
 {
-	std::regex rule1("^(push|assert) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)(\\s)*(;.*)*$");
-	std::regex rule2("^(pop|dump|add|sub|mul|div|mod|print|exit)(\\s)*(;.*)*$");
-	std::smatch match;
-
-	if (std::regex_match(str, match, rule1))
+	try
 	{
-		// std::cout << "Good string - type 1\n";
-		parse_line.push_back(match.str(1));
-		parse_line.push_back(match.str(2));
-		parse_line.push_back(match.str(3));
-		// print_parse_line();
-	}
-	else if (std::regex_match(str, match, rule2))
-	{
-		// std::cout << "Good string - type 2\n";
-		parse_line.push_back(match.str(1));
-	}
-	else
-		throw UnknownInstruction(str, line);
+		std::smatch match;
 
-	execute();
-	parse_line.clear();
+		std::regex is_cmnd1("(.)*(push|assert)(.)*");
+		std::regex is_cmnd2("(.)*(pop|dump|add|sub|mul|div|mod|print|exit)(.)*");
+		std::regex cmnd_begin_line("^(push|assert|pop|dump|add|sub|mul|div|mod|print|exit)(.)*");
+		std::regex is_arg("^(push|assert)(\\s)+(int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)(.)*$");
+		std::regex is_space("^(push|assert) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)(.)*$");
+
+		if (!std::regex_match(str, match, is_cmnd1) && !std::regex_match(str, match, is_cmnd2))
+			throw UnknownInstruction(str, line);
+		if (!std::regex_match(str, match, cmnd_begin_line))
+			throw LexerException("Command should be write from the begin of the line.", line); //better
+		if (std::regex_match(str, match, is_cmnd1) && !std::regex_match(str, match, is_arg))
+			throw LexerException("Bad arguments.", line);
+		if (std::regex_match(str, match, is_cmnd1) && !std::regex_match(str, match, is_space))
+			throw LexerException("Between command and argument should be only one space.", line);
+
+		std::regex rule1("^(push|assert) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)((\\s)*;.*)*$");
+		std::regex rule2("^(pop|dump|add|sub|mul|div|mod|print|exit)((\\s)*;.*)*$");
+
+		std::regex is_integer_type("(int8|int16|int32)");
+		std::regex is_decimal_type("(float|double)");
+		std::regex is_integer("(-?\\d+)");
+		std::regex is_decimal("(-?\\d+\\.\\d+)");
+
+		if (std::regex_match(str, match, rule1))
+		{
+			std::string cmnd = match.str(1);
+			std::string type = match.str(2);
+			std::string val = match.str(3);
+
+			if (std::regex_match(type, match, is_integer_type) && std::regex_match(val, match, is_decimal))
+				throw LexerException("Argument should be integer.", line);
+			if (std::regex_match(type, match, is_decimal_type) && std::regex_match(val, match, is_integer))
+				throw LexerException("Argument should be decimal.", line);
+
+			parse_line.push_back(cmnd);
+			parse_line.push_back(type);
+			parse_line.push_back(val);
+			// print_parse_line();
+		}
+		else if (std::regex_match(str, match, rule2))
+		{
+			parse_line.push_back(match.str(1));
+		}
+		else
+			throw LexerException("Bad text after command.", line);
+
+		execute();
+		parse_line.clear();
+	}
+	catch (std::exception &e)
+	{
+		std::cout << e.what() << std::endl;
+		parse_line.clear();
+	}
 }
 
 void VM::read_console()
@@ -51,8 +87,12 @@ void VM::read_console()
 	int count = 1;
 	for (auto it = v.begin(); it != v.end(); ++it)
 	{
-		parse(*it, count++);
+		if (!it->size() || (*it)[0] == ';')
+			++count;
+		else
+			parse(*it, count++);
 	}
+	throw NoExit();
 }
 
 void VM::read_file(std::string const & str)
@@ -167,7 +207,7 @@ void VM::Assert(eOperandType type, std::string const & value)
 void VM::Add()
 {
 	if (stack.size() < 2)
-		throw SmallStack("Instruction Add on strictly less that two values stack");
+		throw SmallStack("Instruction add on strictly less that two values stack");
 	const IOperand* io1 = stack.back();
 	stack.pop_back();
 	const IOperand* io2 = stack.back();
@@ -182,7 +222,7 @@ void VM::Add()
 void VM::Sub()
 {
 	if (stack.size() < 2)
-		throw SmallStack("Instruction Sub on strictly less that two values stack");
+		throw SmallStack("Instruction sub on strictly less that two values stack");
 	const IOperand* io1 = stack.back();
 	stack.pop_back();
 	const IOperand* io2 = stack.back();
@@ -197,7 +237,7 @@ void VM::Sub()
 void VM::Mul()
 {
 	if (stack.size() < 2)
-		throw SmallStack("Instruction Mul on strictly less that two values stack");
+		throw SmallStack("Instruction mul on strictly less that two values stack");
 	const IOperand* io1 = stack.back();
 	stack.pop_back();
 	const IOperand* io2 = stack.back();
@@ -212,7 +252,7 @@ void VM::Mul()
 void VM::Div()
 {
 	if (stack.size() < 2)
-		throw SmallStack("Instruction Div on strictly less that two values stack");
+		throw SmallStack("Instruction div on strictly less that two values stack");
 	const IOperand* io1 = stack.back();
 	stack.pop_back();
 	const IOperand* io2 = stack.back();
@@ -227,7 +267,7 @@ void VM::Div()
 void VM::Mod()
 {
 	if (stack.size() < 2)
-		throw SmallStack("Instruction Mod on strictly less that two values stack");
+		throw SmallStack("Instruction mod on strictly less that two values stack");
 	const IOperand* io1 = stack.back();
 	stack.pop_back();
 	const IOperand* io2 = stack.back();
@@ -244,7 +284,7 @@ void VM::Print()
 	const IOperand* top = stack.back();
 
 	if (top->getType())
-		throw AssertException();
+		throw PrintException(); //need print exception
 	std::cout << static_cast<char>(std::stoi(top->toString())) << std::endl;
 }
 
@@ -281,7 +321,7 @@ VM::UnknownInstruction & VM::UnknownInstruction::operator=(VM::UnknownInstructio
 
 const char* VM::UnknownInstruction::what() const throw()
 {
-	std::string out = "Unknown instruction \"" + command + "\" on the line " + std::to_string(line);
+	std::string out = "\033[31mUnknown instruction (line "+ std::to_string(line) + ") : \"" + command + "\"\033[0m";
 	return out.c_str();
 }
 
@@ -311,15 +351,21 @@ VM::SmallStack & VM::SmallStack::operator=(VM::SmallStack const & rv)
 
 const char* VM::SmallStack::what() const throw()
 {
-	return comment.c_str();
+	std::string out = "\033[31m" + comment + "\033[0m";
+	return out.c_str();
 }
 
 const char* VM::NoExit::what() const throw()
 {
-	return ("No exit command");
+	return ("\033[31mNo exit command\033[0m");
 }
 
 const char* VM::AssertException::what() const throw()
 {
-	return ("An Assert instruction is not true");
+	return ("\033[31mAn assert instruction is not true\033[0m");
+}
+
+const char* VM::PrintException::what() const throw()
+{
+	return ("\033[31mValue is not a 8-bit integer\033[0m");
 }
