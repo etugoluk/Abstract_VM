@@ -261,7 +261,8 @@ void VM::Print()
 
 	if (top->getType())
 		throw PrintException();
-	std::cout << static_cast<char>(std::stoi(top->toString())) << std::endl;
+	int value = std::stoi(top->toString());
+	std::cout << static_cast<char>(value) << " (" << value << ")" << std::endl;
 }
 
 void VM::Exit()
