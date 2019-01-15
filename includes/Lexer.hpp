@@ -1,3 +1,6 @@
+#ifndef LEXER_HPP
+#define LEXER_HPP
+
 #include <regex>
 
 class Lexer
@@ -37,3 +40,5 @@ public:
 		virtual const char *what() const throw();
 	};
 };
+
+#endif
