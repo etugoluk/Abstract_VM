@@ -2,6 +2,7 @@ push double(0)
 push double(123)
 div
 push double(5.7)
+less int8(5)
 dump
 ;
 

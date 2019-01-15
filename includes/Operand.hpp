@@ -122,6 +122,45 @@ public:
 		}
 	}
 
+	bool operator>( IOperand const & rhs ) const
+	{
+		double rv = std::stod(rhs.toString());
+		double lv = std::stod(this->toString());
+
+		return (lv > rv) ? true : false;
+	}
+
+	bool operator<( IOperand const & rhs ) const
+	{
+		double rv = std::stod(rhs.toString());
+		double lv = std::stod(this->toString());
+
+		return (lv < rv) ? true : false;
+	}
+
+	bool operator>=( IOperand const & rhs ) const
+	{
+		return !(*this < rhs);
+	}
+
+	bool operator<=( IOperand const & rhs ) const
+	{
+		return !(*this > rhs);
+	}
+
+	bool operator==( IOperand const & rhs ) const
+	{
+		double rv = std::stod(rhs.toString());
+		double lv = std::stod(this->toString());
+
+		return (lv == rv) ? true : false;
+	}
+
+	bool operator!=( IOperand const & rhs ) const
+	{
+		return !(*this == rhs);
+	}
+
 	std::string const & toString(void) const
 	{
 		return value_str;

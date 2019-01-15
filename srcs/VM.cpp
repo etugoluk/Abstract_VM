@@ -10,7 +10,7 @@ void VM::parser(std::string const & str, int line)
 		l.check_lexer();
 
 		std::smatch match;
-		std::regex rule1("^(push|assert|asserttype|more|less) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)((\\s)*;.*)*$");
+		std::regex rule1("^(push|assert|asserttype|more|less|equal|not equal|more or equal|less or equal) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)((\\s)*;.*)*$");
 		std::regex rule2("^(pop|dump|add|sub|mul|div|mod|print|exit)((\\s)*;.*)*$");
 
 		if (std::regex_match(str, match, rule1))
@@ -109,6 +109,14 @@ void VM::execute()
 			More(e, parse_line[2]);
 		else if (!parse_line[0].compare("less"))
 			Less(e, parse_line[2]);
+		else if (!parse_line[0].compare("equal"))
+			Equal(e, parse_line[2]);
+		else if (!parse_line[0].compare("not equal"))
+			NotEqual(e, parse_line[2]);
+		else if (!parse_line[0].compare("more or equal"))
+			MoreEqual(e, parse_line[2]);
+		else if (!parse_line[0].compare("less or equal"))
+			LessEqual(e, parse_line[2]);
 	}
 	else if (parse_line.size() == 1)
 	{
@@ -163,7 +171,8 @@ void VM::Assert(eOperandType type, std::string const & value)
 	const IOperand* top = stack.back();
 	const IOperand* arg = Factory().createOperand(type, value);
 
-	if (arg->toString().compare(top->toString()))
+	if (arg->getType() != top->getType() ||
+		arg->toString().compare(top->toString()))
 		throw AssertException("An assert instruction is not true");
 
 	delete arg;
@@ -285,7 +294,7 @@ void VM::More(eOperandType type, std::string const & value)
 	const IOperand* top = stack.back();
 	const IOperand* arg = Factory().createOperand(type, value);
 
-	if (arg->toString().compare(top->toString()) <= 0)
+	if (*arg <= *top)
 		throw AssertException("A more instruction is not true");
 
 	delete arg;
@@ -301,12 +310,76 @@ void VM::Less(eOperandType type, std::string const & value)
 	const IOperand* top = stack.back();
 	const IOperand* arg = Factory().createOperand(type, value);
 
-	if (arg->toString().compare(top->toString()) >= 0)
+	if (*arg >= *top)
 		throw AssertException("A less instruction is not true");
 
 	delete arg;
 
 	std::cout << "\033[32mA less instruction is true\033[0m" << std::endl;
+}
+
+void VM::Equal(eOperandType type, std::string const & value)
+{
+	if (!stack.size())
+		throw SmallStack("Instruction equal on an empty stack");
+
+	const IOperand* top = stack.back();
+	const IOperand* arg = Factory().createOperand(type, value);
+
+	if (*arg != *top)
+		throw AssertException("A equal instruction is not true");
+
+	delete arg;
+
+	std::cout << "\033[32mA equal instruction is true\033[0m" << std::endl;
+}
+
+void VM::NotEqual(eOperandType type, std::string const & value)
+{
+	if (!stack.size())
+		throw SmallStack("Instruction not equal on an empty stack");
+
+	const IOperand* top = stack.back();
+	const IOperand* arg = Factory().createOperand(type, value);
+
+	if (*arg == *top)
+		throw AssertException("A not equal instruction is not true");
+
+	delete arg;
+
+	std::cout << "\033[32mA not equal instruction is true\033[0m" << std::endl;
+}
+
+void VM::MoreEqual(eOperandType type, std::string const & value)
+{
+	if (!stack.size())
+		throw SmallStack("Instruction more or equal on an empty stack");
+
+	const IOperand* top = stack.back();
+	const IOperand* arg = Factory().createOperand(type, value);
+
+	if (*arg < *top)
+		throw AssertException("A more or equal instruction is not true");
+
+	delete arg;
+
+	std::cout << "\033[32mA more or equal instruction is true\033[0m" << std::endl;
+}
+
+void VM::LessEqual(eOperandType type, std::string const & value)
+{
+	if (!stack.size())
+		throw SmallStack("Instruction less or equal on an empty stack");
+
+	const IOperand* top = stack.back();
+	const IOperand* arg = Factory().createOperand(type, value);
+
+	if (*arg > *top)
+		throw AssertException("A less or equal instruction is not true");
+
+	delete arg;
+
+	std::cout << "\033[32mA less or equal instruction is true\033[0m" << std::endl;
 }
 
 VM::SmallStack::SmallStack()

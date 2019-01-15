@@ -25,7 +25,7 @@ Lexer & Lexer::operator=(Lexer const & rv)
 
 bool Lexer::is_command1()
 {
-	std::regex reg("(.)*(push|assert|asserttype|more|less)(.)*");
+	std::regex reg("(.)*(push|assert|asserttype|more|less|equal|not equal|more or equal|less or equal)(.)*");
 
 	if (!std::regex_match(str, match, reg))
 		return false;
@@ -43,7 +43,7 @@ bool Lexer::is_command2()
 
 bool Lexer::command_on_the_begin()
 {
-	std::regex reg("^(push|assert|pop|dump|add|sub|mul|div|mod|print|exit|asserttype|more|less)(.)*");
+	std::regex reg("^(push|assert|pop|dump|add|sub|mul|div|mod|print|exit|asserttype|more|less|equal|not equal|more or equal|less or equal)(.)*");
 
 	if (!std::regex_match(str, match, reg))
 		return false;
@@ -52,7 +52,7 @@ bool Lexer::command_on_the_begin()
 
 bool Lexer::is_arg()
 {
-	std::regex reg("^(push|assert|asserttype|more|less)(\\s)+(int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)(.)*$");
+	std::regex reg("^(push|assert|asserttype|more|less|equal|not equal|more or equal|less or equal)(\\s)+(int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)(.)*$");
 
 	if (!std::regex_match(str, match, reg))
 		return false;
@@ -61,7 +61,7 @@ bool Lexer::is_arg()
 
 bool Lexer::is_space()
 {
-	std::regex reg("^(push|assert|asserttype|more|less) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)(.)*$");
+	std::regex reg("^(push|assert|asserttype|more|less|equal|not equal|more or equal|less or equal) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)(.)*$");
 
 	if (!std::regex_match(str, match, reg))
 		return false;
@@ -70,7 +70,7 @@ bool Lexer::is_space()
 
 bool Lexer::good_command()
 {
-	std::regex rule1("^(push|assert|asserttype|more|less) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)((\\s)*;.*)*$");
+	std::regex rule1("^(push|assert|asserttype|more|less|equal|not equal|more or equal|less or equal) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)((\\s)*;.*)*$");
 	std::regex rule2("^(pop|dump|add|sub|mul|div|mod|print|exit)((\\s)*;.*)*$");
 
 	std::regex is_integer_type("(int8|int16|int32)");

@@ -29,6 +29,10 @@ public:
 	void AssertType(eOperandType type, std::string const & value);
 	void More(eOperandType type, std::string const & value);
 	void Less(eOperandType type, std::string const & value);
+	void Equal(eOperandType type, std::string const & value);
+	void NotEqual(eOperandType type, std::string const & value);
+	void MoreEqual(eOperandType type, std::string const & value);
+	void LessEqual(eOperandType type, std::string const & value);
 
 	void parser(std::string const & str, int line);
 	void read_console();

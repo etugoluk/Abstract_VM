@@ -1,0 +1,11 @@
+push float(42.0)
+push float(42.0)
+pop
+dump
+add
+sub
+mul
+div
+mod
+print
+exit

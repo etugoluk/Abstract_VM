@@ -1,0 +1,10 @@
+push double(42.0)
+push float(42.15)
+add
+push int8(22)
+div
+push int8(22)
+push int8(22)
+add
+dump
+exit

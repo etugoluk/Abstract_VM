@@ -1,0 +1,13 @@
+push float(1.0)
+push double(2.0)
+push int8(3)
+push int8(4)
+push int8(5)
+more int8(123)
+less int8(2)
+not equal int8(6)
+more or equal int8(6)
+less or equal double(1.0)
+print
+dump
+exit
