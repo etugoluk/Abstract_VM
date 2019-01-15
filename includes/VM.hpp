@@ -3,6 +3,7 @@
 #define VM_HPP
 
 #include "Operand.hpp"
+#include "Lexer.hpp"
 #include <vector>
 #include <regex>
 #include <fstream>
@@ -11,7 +12,7 @@ class VM
 {
 	std::deque<const IOperand*> stack;
 	std::vector<std::string> parse_line;
-	Factory f;
+	Factory	f;
 
 public:
 	void Push(eOperandType type, std::string const & value);
@@ -31,9 +32,11 @@ public:
 	void Less(eOperandType type, std::string const & value);
 
 	// void print_parse_line();
-	void parse(std::string const & str, int line);
+	// void lexer(std::string const & str, int line);
+	void parser(std::string const & str, int line);
 	void read_console();
 	void read_file(std::string const & str);
+
 	void execute();
 
 	class UnknownInstruction : public std::exception
@@ -75,7 +78,15 @@ public:
 
 	class AssertException : public std::exception
 	{
+		std::string comment;
 	public:
+		AssertException();
+		AssertException(std::string comment);
+		AssertException(AssertException const & rv);
+		~AssertException() throw();
+		
+		AssertException & operator=(AssertException const & rv);
+
 		virtual const char *what() const throw();
 	};
 

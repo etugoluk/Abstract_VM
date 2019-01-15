@@ -3,6 +3,8 @@ NAME = avm
 SRCS = srcs/main.cpp \
 		srcs/Factory.cpp \
 		srcs/VM.cpp \
+		srcs/Exception.cpp \
+		srcs/Lexer.cpp \
 
 OBJ = $(SRCS:.cpp=.o)
 

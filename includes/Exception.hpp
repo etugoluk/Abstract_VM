@@ -35,19 +35,19 @@ public:
 	virtual const char *what() const throw();
 };
 
-class LexerException : public std::exception
-{
-	std::string comment;
-	int			line;
-public:
-	LexerException();
-	LexerException(std::string comment, int line);
-	LexerException(LexerException const & rv);
-	~LexerException() throw();
+// class LexerException : public std::exception
+// {
+// 	std::string comment;
+// 	int			line;
+// public:
+// 	LexerException();
+// 	LexerException(std::string comment, int line);
+// 	LexerException(LexerException const & rv);
+// 	~LexerException() throw();
 	
-	LexerException & operator=(LexerException const & rv);
+// 	LexerException & operator=(LexerException const & rv);
 
-	virtual const char *what() const throw();
-};
+// 	virtual const char *what() const throw();
+// };
 
 #endif
