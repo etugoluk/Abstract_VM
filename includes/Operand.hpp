@@ -15,8 +15,18 @@ public:
 	Operand();
 	Operand(T value, eOperandType type, std::string str)
 	: value(value), value_str(str), type(type) {}
-	Operand(Operand const &o);
-	Operand & operator=(Operand const &o);
+	Operand(Operand const &o)
+	: value(o.value), value_str(o.str), type(o.type) {}
+	Operand & operator=(Operand const &o)
+	{
+		if (this != &o)
+		{
+			value = o.value;
+			value_str = o.str;
+			type = o.type;
+		}
+		return *this;
+	}
 	~Operand() {}
 
 	int getPrecision( void ) const

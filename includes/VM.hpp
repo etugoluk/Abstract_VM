@@ -15,6 +15,13 @@ class VM
 	Factory	f;
 
 public:
+
+	VM();
+	VM(VM const & rv);
+	~VM();
+	
+	VM & operator=(VM const & rv);
+
 	void Push(eOperandType type, std::string const & value);
 	void Pop();
 	void Dump();

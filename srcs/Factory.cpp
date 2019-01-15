@@ -1,8 +1,6 @@
 
 #include "../includes/Operand.hpp"
 
-Factory::Factory() {}
-
 IOperand const * Factory::createOperand(eOperandType type, std::string const & value ) const
 {
 	IOperand const * (Factory::*ptr[5])(std::string const & value) const;

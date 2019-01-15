@@ -2,6 +2,26 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+VM::VM()
+{}
+
+VM::VM(VM const & rv) : stack(rv.stack), parse_line(rv.parse_line), f(rv.f)
+{}
+
+VM::~VM()
+{}
+
+VM & VM::operator=(VM const & rv)
+{
+	if (this != &rv)
+	{
+		stack = rv.stack;
+		parse_line = rv.parse_line;
+		f = rv.f;
+	}
+	return *this;
+}
+
 void VM::parser(std::string const & str, int line)
 {
 	try

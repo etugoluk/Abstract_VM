@@ -8,7 +8,6 @@
 class Factory
 {
 public:
-	Factory();
 
 	IOperand const * createOperand(eOperandType type, std::string const & value ) const;
 
