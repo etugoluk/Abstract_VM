@@ -26,10 +26,15 @@ void VM::parser(std::string const & str, int line)
 {
 	try
 	{
+		std::smatch match;
+		std::regex is_command("(.)*(push|assert|asserttype|more|less|equal|not equal|more or equal|less or equal|pop|dump|add|sub|mul|div|mod|print|exit)(.)*");
+
+		if (!std::regex_match(str, match, is_command))
+			throw UnknownInstruction(line);	
+
 		Lexer l(str, line);
 		l.check_lexer();
 
-		std::smatch match;
 		std::regex rule1("^(push|assert|asserttype|more|less|equal|not equal|more or equal|less or equal) (int8|int16|int32|float|double)\\((-?\\d+(\\.\\d+)?)\\)((\\s)*;.*)*$");
 		std::regex rule2("^(pop|dump|add|sub|mul|div|mod|print|exit)((\\s)*;.*)*$");
 
@@ -119,6 +124,7 @@ void VM::execute()
 			e = Double;
 		else if (!parse_line[1].compare("float"))
 			e = Float;
+
 		if (!parse_line[0].compare("push"))
 			Push(e, parse_line[2]);
 		else if (!parse_line[0].compare("assert"))
@@ -277,6 +283,8 @@ void VM::Mod()
 
 void VM::Print()
 {
+	if (!stack.size())
+		throw SmallStack("Instruction print on an empty stack");
 	const IOperand* top = stack.back();
 
 	if (top->getType())
@@ -471,4 +479,34 @@ const char* VM::AssertException::what() const throw()
 const char* VM::PrintException::what() const throw()
 {
 	return ("\033[31mValue is not a 8-bit integer\033[0m");
+}
+
+VM::UnknownInstruction::UnknownInstruction()
+: line(0)
+{}
+
+VM::UnknownInstruction::UnknownInstruction(int line)
+: line(line)
+{}
+
+VM::UnknownInstruction::UnknownInstruction(VM::UnknownInstruction const & rv)
+: line(rv.line)
+{}
+
+VM::UnknownInstruction::~UnknownInstruction() throw()
+{}
+
+VM::UnknownInstruction & VM::UnknownInstruction::operator=(VM::UnknownInstruction const & rv)
+{
+	if (this != &rv)
+	{
+		line = rv.line;
+	}
+	return *this;
+}
+
+const char* VM::UnknownInstruction::what() const throw()
+{
+	std::string out = "\033[31mUnknown instruction (line " + std::to_string(line) + ").\033[0m";
+	return out.c_str();
 }

@@ -11,7 +11,8 @@ push int32(42)
 dump
 
 
-
+assert int32(42.3)
+equal pop not equal int32(42)
 
 
 pop

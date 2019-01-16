@@ -98,8 +98,6 @@ bool Lexer::good_command()
 
 void Lexer::check_lexer()
 {
-	if (!is_command1() && !is_command2())
-		throw LexerException("Unknown instruction.", line);
 	if (!command_on_the_begin())
 		throw LexerException("Command should be write from the begin of the line.", line);
 	if (is_command1() && !is_arg())

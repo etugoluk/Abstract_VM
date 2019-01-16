@@ -87,6 +87,20 @@ public:
 		virtual const char *what() const throw();
 	};
 
+	class UnknownInstruction : public std::exception
+	{
+		int			line;
+	public:
+		UnknownInstruction();
+		UnknownInstruction(int line);
+		UnknownInstruction(UnknownInstruction const & rv);
+		~UnknownInstruction() throw();
+		
+		UnknownInstruction & operator=(UnknownInstruction const & rv);
+
+		virtual const char *what() const throw();
+	};
+
 };
 
 #endif

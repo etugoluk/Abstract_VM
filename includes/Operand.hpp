@@ -100,6 +100,10 @@ public:
 			ss << result;
 			return Factory().createOperand(max_type, ss.str());
 		}
+		catch (DivModByZero &d)
+		{
+			throw DivModByZero();
+		}
 		catch (std::exception &e)
 		{
 			throw Overflow(ss.str());
@@ -120,6 +124,10 @@ public:
 			int result = std::stoi(this->toString()) % std::stoi(rhs.toString());
 			ss << result;
 			return Factory().createOperand(max_type, ss.str());
+		}
+		catch (DivModByZero &d)
+		{
+			throw DivModByZero();
 		}
 		catch (std::exception &e)
 		{
